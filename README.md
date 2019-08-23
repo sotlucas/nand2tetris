@@ -9,7 +9,7 @@ Here I'll keep all the projects I complete from the nand2tetris course.
 #### Hardware layer
 
 - [x] Project 1: Boolean Logic 
-- [ ] Project 2: Boolean Arithmetic 
+- [x] Project 2: Boolean Arithmetic 
 - [ ] Project 3: Sequential Logic
 - [ ] Project 4: Machine Language 
 - [ ] Project 5: Computer Architecture 
