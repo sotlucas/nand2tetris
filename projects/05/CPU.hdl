@@ -39,5 +39,31 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+    // Loading to A-Register
+    Mux16(a=instruction, b=outALU, sel=instruction[15], out=toAReg); // If OPCODE==0 load instruction ELSE load outALU
+    Mux(a=true, b=instruction[5], sel=instruction[15], out=loadAReg); // If OPCODE==0 always load
+    ARegister(in=toAReg, load=loadAReg, out=outAReg, out[0..14]=addressM);
+
+    // Loading to D-Register
+    Mux(a=false, b=instruction[4], sel=instruction[15], out=loadDReg); // If OPCODE==0 don't load
+    DRegister(in=outALU, load=loadDReg, out=outDReg);
+
+    // Loading ALU
+    Mux16(a=outAReg, b=inM, sel=instruction[12], out=AmuxM);
+    ALU(x=outDReg, y=AmuxM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=outALU, out=outM, zr=ZR, ng=NG);
+    
+    // Write M
+    Mux(a=false, b=instruction[3], sel=instruction[15], out=writeM); // Check if is an A or C instruction
+
+    // JMP Logic
+    Not(in=NG, out=notNG);
+    Or(a=ZR, b=notNG, out=ZRornotNG);
+    Not(in=ZR, out=notZR);
+    Or(a=ZR, b=NG, out=ZRorNG);
+    And(a=notNG, b=notZR, out=notNGandnotZR);
+    Mux8Way16(a=false, b[0]=notNGandnotZR, c[0]=ZR, d[0]=ZRornotNG, e[0]=NG, f[0]=notZR, g[0]=ZRorNG, h=true, sel=instruction[0..2], out[0]=outJMP);
+
+    // Loading to Program Counter (PC)
+    Mux(a=false, b=outJMP, sel=instruction[15], out=finalOutJMP); // Check if is an A or a C instruction
+    PC(in=outAReg, load=finalOutJMP, inc=true, reset=reset, out[0..14]=pc);
 }
