@@ -13,7 +13,7 @@ Here I'll keep all the projects I complete from the nand2tetris course.
 - [x] Project 3: Sequential Logic
 - [x] Project 4: Machine Language 
 - [x] Project 5: Computer Architecture 
-- [ ] Project 6: Assembler 
+- [x] [Project 6: Assembler (This is software actually)](projects/06/hack_assembler/)
 
 #### Software layer
 
