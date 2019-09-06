@@ -1,4 +1,4 @@
-### Hack Assembler
+## Hack Assembler
 
 This is an assembler for the Hack Machine Language.
 
