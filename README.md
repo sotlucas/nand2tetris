@@ -1,18 +1,22 @@
 ## Nand2Tetris
 
-Here I'll keep all the projects I complete from the nand2tetris course.
+The aim of this course is to build a general purpose computer (hardware and software) from the ground up, starting with just a simple NAND gate.
+
+Following the specifications from the book "The Elements of Computing Systems" by Noam Nisan and Shimon Shocken.
 
 ### Projects
 
-[All projects here](https://www.nand2tetris.org/course).
+All projects are [here](https://www.nand2tetris.org/course).
+
+You can download the Software Suite from [here](https://www.nand2tetris.org/software).
 
 #### Hardware layer
 
-- [x] Project 1: Boolean Logic 
-- [x] Project 2: Boolean Arithmetic 
-- [x] Project 3: Sequential Logic
-- [x] Project 4: Machine Language 
-- [x] Project 5: Computer Architecture 
+- [x] [Project 1: Boolean Logic](projects/01/)
+- [x] [Project 2: Boolean Arithmetic](projects/02/)
+- [x] [Project 3: Sequential Logic](projects/03/)
+- [x] [Project 4: Machine Language](projects/04/)
+- [x] [Project 5: Computer Architecture](projects/05/)
 - [x] [Project 6: Assembler (This is software actually)](projects/06/hack_assembler/)
 
 #### Software layer
