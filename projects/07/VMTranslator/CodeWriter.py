@@ -6,8 +6,8 @@ class CodeWriter():
     TEMP = 5
     
     def __init__(self, file_name):
-        file_name_final = file_name.split('.')[0]
-        self._outfile = open(file_name_final + '.asm', 'w')
+        self._file_name_final = file_name.split('.')[0]
+        self._outfile = open(self._file_name_final + '.asm', 'w')
         self.segments = {'local':'LCL', 'argument':'ARG', 'this':'THIS', 'that':'THAT'}
         self._eq_number = 0
         self._gt_number = 0
@@ -55,7 +55,6 @@ class CodeWriter():
                 'M=M+1\n']
             )
         elif segment == 'temp':
-            print(segment)
             self._outfile.writelines(
                 [f'@{CodeWriter.TEMP + index}\n',
                 'D=A\n',
@@ -65,6 +64,31 @@ class CodeWriter():
                 '@addr\n',
                 'A=M\n',
                 'D=M\n',
+                '@SP\n',
+                'A=M\n',
+                'M=D\n',
+
+                '@SP\n',
+                'M=M+1\n']
+            )
+        elif segment == 'pointer':
+            symbol = 'THAT' if index == 1 else 'THIS'
+            self._outfile.writelines(
+                [f'@{symbol}\n',
+                'D=M\n',
+
+                '@SP\n',
+                'A=M\n',
+                'M=D\n',
+
+                '@SP\n',
+                'M=M+1\n']
+            )
+        elif segment == 'static':
+            self._outfile.writelines(
+                [f'@{self._file_name_final}.{index}\n',
+                'D=M\n',
+
                 '@SP\n',
                 'A=M\n',
                 'M=D\n',
@@ -113,6 +137,25 @@ class CodeWriter():
                 'D=M\n',
                 '@addr\n',
                 'A=M\n',
+                'M=D\n']
+            )
+        elif segment == 'pointer':
+            symbol = 'THAT' if index == 1 else 'THIS'
+            self._outfile.writelines(
+                ['@SP\n',
+                'M=M-1\n',
+                'A=M\n',
+                'D=M\n',
+                f'@{symbol}\n',
+                'M=D\n']
+            )
+        elif segment == 'static':
+            self._outfile.writelines(
+                ['@SP\n',
+                'M=M-1\n',
+                'A=M\n',
+                'D=M\n',
+                f'@{self._file_name_final}.{index}\n',
                 'M=D\n']
             )
         else:
