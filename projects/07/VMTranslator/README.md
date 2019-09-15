@@ -4,7 +4,7 @@ This is a Virtual Machine translator. It translates .vm code (bytecode) to the H
 
 #### Run
 ```
-python VMTranslator.py test.asm
+python VMTranslator.py test.vm
 ```
 
 This will generate a `test.asm` file that could be run in the [CPUEmulator](../../../tools/).
