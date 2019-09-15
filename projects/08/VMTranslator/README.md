@@ -6,7 +6,7 @@ In this project I'm extending the VM Translator to allow branching and function 
 
 #### Run
 ```
-python VMTranslator.py test.asm
+python VMTranslator.py test.vm
 ```
 
 This will generate a `test.asm` file that could be run in the [CPUEmulator](../../../tools/).
