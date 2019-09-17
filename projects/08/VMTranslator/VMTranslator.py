@@ -26,6 +26,10 @@ class VMTranslator():
                 self.code_writer.write_goto(self.parser.arg1())
             elif self.parser.command_type() == self.parser.C_IF:
                 self.code_writer.write_if(self.parser.arg1())
+            elif self.parser.command_type() == self.parser.C_FUNCTION:
+                self.code_writer.write_function(self.parser.arg1(), self.parser.arg2())
+            elif self.parser.command_type() == self.parser.C_RETURN:
+                self.code_writer.write_return()
             else:
                 continue
         self.code_writer.close()

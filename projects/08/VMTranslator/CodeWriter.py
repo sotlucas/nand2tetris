@@ -207,6 +207,103 @@ class CodeWriter():
             'D;JNE\n']
         )
         
+    def write_function(self, function_name, num_locals):
+        """
+        Writes assembly code that effects the function command
+        """
+        self._outfile.writelines(
+            [f'({function_name})\n',
+            '@i\n',
+            'M=1\n',
+            f'@{num_locals}\n',
+            'D=A\n',
+            '@n\n',
+            f'M=D\n',
+
+            # while (i > n)
+            f'({function_name}$LOOP)\n',
+            '@n\n',
+            'D=M\n',
+            '@i\n',
+            'D=D-M\n',
+            f'@{function_name}$ENDLOOP\n',
+            'D;JEQ\n',
+            
+            # push 0
+            '@SP\n',
+            'A=M\n',
+            'M=0\n',
+
+            # i++
+            '@i\n',
+            'M=M+1\n',
+            
+            f'@{function_name}$LOOP\n',
+            '0;JMP\n',
+            
+            f'({function_name}$ENDLOOP)\n']
+        )
+
+    def write_return(self):
+        """
+        Writes assembly code that effects the return command
+        """
+        self._outfile.writelines(
+            # endFrame = LCL
+            ['@LCL\n',
+            'D=M\n',
+            '@endFrame\n',
+            'M=D\n',
+            
+            # *ARG = pop()
+            '@SP\n',
+            'M=M-1\n',
+            'A=M\n',
+            'D=M\n',
+            '@ARG\n',
+            'A=M\n',
+            'M=D\n',
+            
+            # SP = ARG + 1
+            '@ARG\n',
+            'M=M+1\n',
+            'D=M\n',
+            '@SP\n',
+            'M=D\n',
+            
+            # {THIS/THAT/ARG/LCL} = *(endFrame - {1/2/3/4})
+            '@endFrame\n',
+            'M=M-1\n',
+            'A=M\n',
+            'D=M\n',
+            '@THAT\n',
+            'M=D\n',
+            '@endFrame\n',
+            'M=M-1\n',
+            'A=M\n',
+            'D=M\n',
+            '@THIS\n',
+            'M=D\n',
+            '@endFrame\n',
+            'M=M-1\n',
+            'A=M\n',
+            'D=M\n',
+            '@ARG\n',
+            'M=D\n',
+            '@endFrame\n',
+            'M=M-1\n',
+            'A=M\n',
+            'D=M\n',
+            '@LCL\n',
+            'M=D\n',
+
+            # retAddr = *(endFrame - 5)
+            # goto retAddr
+            '@endFrame\n',
+            'M=M-1\n',
+            'A=M\n',
+            '0;JMP\n'] 
+        )
 
     def close(self):
         self._outfile.close()

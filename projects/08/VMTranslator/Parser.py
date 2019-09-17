@@ -61,6 +61,12 @@ class Parser():
     def _is_if(self, line):
         return ('if-goto' in line)
 
+    def _is_function(self, line):
+        return ('function' in line)
+
+    def _is_return(self, line):
+        return ('return' in line)
+
     def command_type(self):
         if self._is_arithmetic(self._current_line):
             return Parser.C_ARITHMETIC
@@ -74,6 +80,10 @@ class Parser():
             return Parser.C_IF
         elif self._is_goto(self._current_line):
             return Parser.C_GOTO
+        elif self._is_function(self._current_line):
+            return Parser.C_FUNCTION
+        elif self._is_return(self._current_line):
+            return Parser.C_RETURN
         else:
             return None
 
