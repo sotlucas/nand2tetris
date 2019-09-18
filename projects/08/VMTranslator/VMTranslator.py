@@ -30,6 +30,8 @@ class VMTranslator():
                 self.code_writer.write_function(self.parser.arg1(), self.parser.arg2())
             elif self.parser.command_type() == self.parser.C_RETURN:
                 self.code_writer.write_return()
+            elif self.parser.command_type() == self.parser.C_CALL:
+                self.code_writer.write_call(self.parser.arg1(), self.parser.arg2())
             else:
                 continue
         self.code_writer.close()
@@ -42,5 +44,3 @@ if __name__ == '__main__':
 
     vm_translator = VMTranslator(args.file)
     vm_translator.translate()
-    
-

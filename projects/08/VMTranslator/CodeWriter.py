@@ -9,9 +9,11 @@ class CodeWriter():
         self._file_name_final = file_name.split('.')[0]
         self._outfile = open(self._file_name_final + '.asm', 'w')
         self.segments = {'local':'LCL', 'argument':'ARG', 'this':'THIS', 'that':'THAT'}
+        # In case of repetitions
         self._eq_number = 0
         self._gt_number = 0
         self._lt_number = 0
+        self._ret_number = 0
 
     # Writing operations
     def write_arithmetic(self, command):
@@ -304,6 +306,58 @@ class CodeWriter():
             'A=M\n',
             '0;JMP\n'] 
         )
+
+    def write_call(self, function_name, num_args):
+        """
+        Writes assembly code that effects the call command
+        """
+        self._outfile.writelines(
+            [f'@{function_name}$ret.{self._ret_number}\n',
+            'D=A\n',
+            '@SP\n',
+            'M=D\n',
+
+            # Push frame
+            '@LCL\n',
+            'D=A\n',
+            '@SP\n',
+            'M=D\n',
+            '@ARG\n',
+            'D=A\n',
+            '@SP\n',
+            'M=D\n',
+            '@THIS\n',
+            'D=A\n',
+            '@SP\n',
+            'M=D\n',
+            '@THAT\n',
+            'D=A\n',
+            '@SP\n',
+            'M=D\n',
+
+            # ARG = SP - 5 - num_args
+            '@SP\n',
+            'D=M\n',
+            '@5\n',
+            'D=D-A\n',
+            f'@{num_args}\n',
+            'D=D-A\n',
+            '@ARG\n',
+            'M=D\n',
+
+            # LCL = SP
+            '@SP\n',
+            'D=M\n',
+            '@LCL\n',
+            'M=D\n',
+            
+            # goto function_name
+            f'@{function_name}\n',
+            '0;JMP\n',
+            
+            f'({function_name}$ret.{self._ret_number})\n']
+        )
+        self._ret_number += 1
 
     def close(self):
         self._outfile.close()

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+import re
+
+
 class Parser():
     """
     Handles the parsing of a single .vm file, and encapsulates access to the
@@ -28,10 +31,16 @@ class Parser():
 
     def __init__(self, file_name):
         vm_file = open(file_name, 'r')
-        self._lines = vm_file.read().split('\n')
+        self._lines = self._remove_empty_strings(self._remove_comments(vm_file.read().split('\n')))
         vm_file.close()
         self._lines.reverse()
         self._current_line = None
+
+    def _remove_comments(self, lines):
+        return [re.sub(r'//(.+)*', '', line) for line in lines]
+
+    def _remove_empty_strings(self, str_list):
+        return list(filter(None, str_list))
 
     def advance(self):
         self._current_line = self._lines.pop()
@@ -67,6 +76,9 @@ class Parser():
     def _is_return(self, line):
         return ('return' in line)
 
+    def _is_call(self, line):
+        return ('call' in line)
+
     def command_type(self):
         if self._is_arithmetic(self._current_line):
             return Parser.C_ARITHMETIC
@@ -84,6 +96,8 @@ class Parser():
             return Parser.C_FUNCTION
         elif self._is_return(self._current_line):
             return Parser.C_RETURN
+        elif self._is_call(self._current_line):
+            return Parser.C_CALL
         else:
             return None
 
