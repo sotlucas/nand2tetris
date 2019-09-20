@@ -397,6 +397,15 @@ class CodeWriter():
         )
         self._ret_number += 1
 
+    def write_init(self):
+        self._outfile.writelines(
+            ['@256\n',
+            'D=A\n',
+            '@SP\n',
+            'M=D\n']
+        )
+        self.write_call('Sys.init', '0')
+
     def close(self):
         self._outfile.close()
 

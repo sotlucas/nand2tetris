@@ -16,6 +16,7 @@ class VMTranslator():
         self.parser = Parser.Parser(filename)
 
     def translate(self):
+        self.code_writer.write_init()
         while self.parser.has_more_commands():
             self.parser.advance()
             if self.parser.command_type() == self.parser.C_ARITHMETIC:
