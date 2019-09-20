@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 
+import re
+
+
 class CodeWriter():
 
     # Temp position in RAM
     TEMP = 5
     
     def __init__(self, file_name):
-        self._file_name_final = file_name.split('.')[0]
-        self._outfile = open(self._file_name_final + '.asm', 'w')
+        self._file_name_final = re.sub('\/', '', file_name.split('.')[0])
+        self._outfile = open(self._file_name_final + '.asm', 'a')
         self.segments = {'local':'LCL', 'argument':'ARG', 'this':'THIS', 'that':'THAT'}
         # In case of repetitions
         self._eq_number = 0
@@ -185,12 +188,14 @@ class CodeWriter():
         """
         Writes the asembly code that effects the label command.
         """
+        self._outfile.write(f'// label {label}\n') # For debugging purposes
         self._outfile.writelines(f'({label})\n')
         
     def write_goto(self, label):
         """
         Writes the asembly code that effects the goto command.
         """
+        self._outfile.write(f'// goto {label}\n') # For debugging purposes
         self._outfile.writelines(
             [f'@{label}\n',
             '0;JMP\n']
@@ -200,6 +205,7 @@ class CodeWriter():
         """
         Writes the asembly code that effects the if-goto command.
         """
+        self._outfile.write(f'// if-goto {label}\n') # For debugging purposes
         self._outfile.writelines(
             [f'@SP\n',
             'M=M-1\n',
@@ -213,10 +219,11 @@ class CodeWriter():
         """
         Writes assembly code that effects the function command
         """
+        self._outfile.write(f'// function {function_name} {num_locals}\n') # For debugging purposes
         self._outfile.writelines(
             [f'({function_name})\n',
             '@i\n',
-            'M=1\n',
+            'M=0\n',
             f'@{num_locals}\n',
             'D=A\n',
             '@n\n',
@@ -239,6 +246,10 @@ class CodeWriter():
             # i++
             '@i\n',
             'M=M+1\n',
+
+            # SP++
+            '@SP\n',
+            'M=M+1\n',
             
             f'@{function_name}$LOOP\n',
             '0;JMP\n',
@@ -250,11 +261,21 @@ class CodeWriter():
         """
         Writes assembly code that effects the return command
         """
+        self._outfile.write(f'// return\n') # For debugging purposes
         self._outfile.writelines(
             # endFrame = LCL
             ['@LCL\n',
             'D=M\n',
             '@endFrame\n',
+            'M=D\n',
+
+            # retAddr = *(endFrame - 5)
+            '@endFrame\n',
+            'D=M\n',
+            '@5\n',
+            'A=D-A\n',
+            'D=M\n',
+            '@retAddr\n',
             'M=D\n',
             
             # *ARG = pop()
@@ -299,10 +320,8 @@ class CodeWriter():
             '@LCL\n',
             'M=D\n',
 
-            # retAddr = *(endFrame - 5)
             # goto retAddr
-            '@endFrame\n',
-            'M=M-1\n',
+            '@retAddr\n',
             'A=M\n',
             '0;JMP\n'] 
         )
@@ -311,29 +330,48 @@ class CodeWriter():
         """
         Writes assembly code that effects the call command
         """
+        self._outfile.write(f'// call {function_name} {num_args}\n') # For debugging purposes
         self._outfile.writelines(
             [f'@{function_name}$ret.{self._ret_number}\n',
             'D=A\n',
             '@SP\n',
+            'A=M\n',
             'M=D\n',
+            '@SP\n',
+            'M=M+1\n',
 
             # Push frame
             '@LCL\n',
-            'D=A\n',
+            'D=M\n',
             '@SP\n',
+            'A=M\n',
             'M=D\n',
+            '@SP\n',
+            'M=M+1\n',
+
             '@ARG\n',
-            'D=A\n',
+            'D=M\n',
             '@SP\n',
+            'A=M\n',
             'M=D\n',
+            '@SP\n',
+            'M=M+1\n',
+
             '@THIS\n',
-            'D=A\n',
+            'D=M\n',
             '@SP\n',
+            'A=M\n',
             'M=D\n',
+            '@SP\n',
+            'M=M+1\n',
+
             '@THAT\n',
-            'D=A\n',
+            'D=M\n',
             '@SP\n',
+            'A=M\n',
             'M=D\n',
+            '@SP\n',
+            'M=M+1\n',
 
             # ARG = SP - 5 - num_args
             '@SP\n',

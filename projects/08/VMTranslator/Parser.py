@@ -33,6 +33,10 @@ class Parser():
         vm_file = open(file_name, 'r')
         self._lines = self._remove_empty_strings(self._remove_comments(vm_file.read().split('\n')))
         vm_file.close()
+
+        for line in self._lines:
+            print(line)
+
         self._lines.reverse()
         self._current_line = None
 
@@ -80,24 +84,24 @@ class Parser():
         return ('call' in line)
 
     def command_type(self):
-        if self._is_arithmetic(self._current_line):
+        if self._is_call(self._current_line):
+            return Parser.C_CALL
+        elif self._is_return(self._current_line):
+            return Parser.C_RETURN
+        elif self._is_function(self._current_line):
+            return Parser.C_FUNCTION
+        elif self._is_if(self._current_line):
+            return Parser.C_IF
+        elif self._is_goto(self._current_line):
+            return Parser.C_GOTO
+        elif self._is_label(self._current_line):
+            return Parser.C_LABEL
+        elif self._is_arithmetic(self._current_line):
             return Parser.C_ARITHMETIC
         elif self._is_push(self._current_line):
             return Parser.C_PUSH
         elif self._is_pop(self._current_line):
             return Parser.C_POP
-        elif self._is_label(self._current_line):
-            return Parser.C_LABEL
-        elif self._is_if(self._current_line):
-            return Parser.C_IF
-        elif self._is_goto(self._current_line):
-            return Parser.C_GOTO
-        elif self._is_function(self._current_line):
-            return Parser.C_FUNCTION
-        elif self._is_return(self._current_line):
-            return Parser.C_RETURN
-        elif self._is_call(self._current_line):
-            return Parser.C_CALL
         else:
             return None
 
