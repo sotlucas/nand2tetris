@@ -22,7 +22,7 @@ You can download the Software Suite from [here](https://www.nand2tetris.org/soft
 #### Software layer
 
 - [x] Project 7: [VM I: Stack Arithmetic](projects/07/VMTranslator/)
-- [ ] Project 8: VM II: Program Control 
+- [x] Project 8: [VM II: Program Control](projects/08/VMTranslator)
 - [ ] Project 9: High-Level Language 
 - [ ] Project 10: Compiler I: Syntax Analysis
 - [ ] Project 11: Compiler II: Code Generation 
