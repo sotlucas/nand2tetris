@@ -11,12 +11,13 @@ class VMTranslator():
     def __init__(self, outfilename):
         self.parser = None
         self.code_writer = CodeWriter.CodeWriter(outfilename)
+        self.code_writer.write_init()
 
     def change_file(self, filename):
         self.parser = Parser.Parser(filename)
+        self.code_writer.set_current_file(filename)
 
     def translate(self):
-        self.code_writer.write_init()
         while self.parser.has_more_commands():
             self.parser.advance()
             if self.parser.command_type() == self.parser.C_ARITHMETIC:

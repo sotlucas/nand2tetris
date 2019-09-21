@@ -1,8 +1,3 @@
-// //
-// //
-// //
-// //
-// //
 // push constant 0
 @0
 D=A
@@ -26,6 +21,7 @@ D=M
 @addr
 A=M
 M=D
+// label LOOP_START
 (LOOP_START)
 // push argument 0
 @0
@@ -147,6 +143,7 @@ A=M
 M=D
 @SP
 M=M+1
+// if-goto LOOP_START
 @SP
 M=M-1
 A=M

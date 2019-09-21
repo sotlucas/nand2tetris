@@ -33,10 +33,6 @@ class Parser():
         vm_file = open(file_name, 'r')
         self._lines = self._remove_empty_strings(self._remove_comments(vm_file.read().split('\n')))
         vm_file.close()
-
-        for line in self._lines:
-            print(line)
-
         self._lines.reverse()
         self._current_line = None
 

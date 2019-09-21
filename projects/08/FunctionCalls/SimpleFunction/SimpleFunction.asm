@@ -1,9 +1,7 @@
-// //
-// //
-// //
+// function SimpleFunction.test 2
 (SimpleFunction.test)
 @i
-M=1
+M=0
 @2
 D=A
 @n
@@ -19,6 +17,8 @@ D;JEQ
 A=M
 M=0
 @i
+M=M+1
+@SP
 M=M+1
 @SimpleFunction.test$LOOP
 0;JMP
@@ -123,9 +123,17 @@ A=M
 M=M-D
 @SP
 M=M+1
+// return
 @LCL
 D=M
 @endFrame
+M=D
+@endFrame
+D=M
+@5
+A=D-A
+D=M
+@retAddr
 M=D
 @SP
 M=M-1
@@ -163,7 +171,6 @@ A=M
 D=M
 @LCL
 M=D
-@endFrame
-M=M-1
+@retAddr
 A=M
 0;JMP

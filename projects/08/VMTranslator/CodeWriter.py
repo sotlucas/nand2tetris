@@ -10,13 +10,20 @@ class CodeWriter():
     
     def __init__(self, file_name):
         self._file_name_final = re.sub('\/', '', file_name.split('.')[0])
-        self._outfile = open(self._file_name_final + '.asm', 'a')
+        if '/' in file_name:
+            self._outfile = open(self._file_name_final + '/' + self._file_name_final + '.asm', 'a')
+        else:
+            self._outfile = open(self._file_name_final + '.asm', 'a')
         self.segments = {'local':'LCL', 'argument':'ARG', 'this':'THIS', 'that':'THAT'}
         # In case of repetitions
         self._eq_number = 0
         self._gt_number = 0
         self._lt_number = 0
         self._ret_number = 0
+        self._current_file = None
+
+    def set_current_file(self, current_file):
+        self._current_file = re.sub('.+\/', '', current_file.split('.')[0])
 
     # Writing operations
     def write_arithmetic(self, command):
@@ -92,7 +99,7 @@ class CodeWriter():
             )
         elif segment == 'static':
             self._outfile.writelines(
-                [f'@{self._file_name_final}.{index}\n',
+                [f'@{self._current_file}.{index}\n',
                 'D=M\n',
 
                 '@SP\n',
@@ -161,7 +168,7 @@ class CodeWriter():
                 'M=M-1\n',
                 'A=M\n',
                 'D=M\n',
-                f'@{self._file_name_final}.{index}\n',
+                f'@{self._current_file}.{index}\n',
                 'M=D\n']
             )
         else:
